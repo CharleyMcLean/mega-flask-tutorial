@@ -1,4 +1,10 @@
 # ~/src/flask-tutorial/microblog/app/views.py
+
+# render_template function takes a template filename and a variable
+# list of template arguments and returns the rendered template,
+# with args replaed. Invokes the Jinja2 templating engine as part
+# of the Flask framework.
+from flask import render_template
 from app import app
 
 # Views are the handlers that respond to requests from web browsers or
@@ -10,4 +16,18 @@ from app import app
 @app.route('/')
 @app.route('/index')
 def index():
-    return "Yo, what up world!"
+    user = {'nickname': 'Alex'}
+    posts = [
+        {
+            'author': {'nickname': 'Heidi'},
+            'body': 'Beautiful day in Portland!'
+        },
+        {
+            'author': {'nickname': 'Becca'},
+            'body': 'Schnerdy rocks!'
+        }
+    ]
+    return render_template('index.html',
+                           title='Home',
+                           user=user,
+                           posts=posts)
