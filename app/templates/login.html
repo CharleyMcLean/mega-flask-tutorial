@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+<!-- This template expects a form object instanstiated from the form class we defined stored in a temp arg named form -->
+{% block content %}
+<script type="text/javascript">
+{
+    u = openid.search('<username>')
+    if (u != -1) {
+        // openid requires username
+        user = prompt('Enter your' + pr + 'username:')
+        openid = openid.substr(0, u) + user
+    }
+    form = document.forms['login'];
+    form.elements['openid'].value = openid
+}
+</script>
+    <h1>Sign In</h1>
+    <form action="" method="post" name="login">
+        <!-- this temp arg will get replaced with a hidden field that implements the CSRF prevention we enabled in the config. -->
+        <!-- This field needs to be in all forms if CSRF is enabled. -->
+        {{ form.hidden_tag() }}
+        <p>
+            Please enter your OpenID:<br>
+            <!-- field will have width of 80 chars -->
+            {{ form.openid(size=80) }}<br>
+            <!-- Any fields that have validators attached will have errors added under form.field_name.errors -->
+            {% for error in form.openid.errors %}
+                <span style="color:red;">[{{ error }}]</span>
+            {% endfor %}<br>
+            |{% for pr in providers %}
+                <a href="javascript:set_openid('{{ pr.url }}', '{{ pr.name }}');">{{ pr.name }}</a> |
+            {% endfor %}
+        </p>
+        <p>{{ form.remember_me }} Remember Me</p>
+        <p><input type="submit" value="Sign In"></p>
+    </form>
+{% endblock %}
